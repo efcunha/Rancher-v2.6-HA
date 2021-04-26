@@ -110,7 +110,7 @@ $ kubectl get nodes
 $ kubectl get pods --all-namespaces
 ```
 
-# SALVAR OS ARQUIVOS
+# Salvar os Arquivos
 
 # Instalar HELM
 
@@ -158,7 +158,7 @@ $ kubectl -n cattle-system rollout status deploy/rancher
 $ kubectl -n cattle-system get deploy rancher
 ```
 
-# RODAR O NGINX
+# Rodar o Nginx
 
 ```sh 
 $ sudo vi /etc/nginx.conf
@@ -243,9 +243,4 @@ $ ssh ubuntu@172.16.0.16  # - worker04
 # docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name worker-1 --worker
 
 # docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name worker-2 --worker
-
-
 ```
-
-
-
