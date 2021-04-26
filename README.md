@@ -1,4 +1,4 @@
-# Rancher HA - Alta Disponibilidade
+# Rancher v2.5 Kubernetes - Alta Disponibilidade
 
 Repositorio usado para mostrar instalação do Rancher em HA.
 
