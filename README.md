@@ -80,17 +80,21 @@ $ rke --version
 $ exit
 ```
 
-# COPIAR rancher-cluster.yml para Servidor
+COPIAR rancher-cluster.yml para Servidor
 
-# USAR user ubuntu
-# Copiar a para os outros hosts.
+USAR user ubuntu
 
 ```sh
 $ ssh-keygen
 $ vi ~/.ssh/id_rsa
 $ chmod 600 /home/ubuntu/.ssh/id_rsa
+```
+Copiar a chave gerada para os outros hosts.
+
+```sh
 $ ssh-copy-id username@remote_host
 ```
+
 
 # Rodar RKE
 
