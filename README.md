@@ -69,7 +69,9 @@ $ mv ./kubectl /usr/local/bin/kubectl
 $ kubectl version --client
 ```
 
-# Instalar RKE
+# Instalar RKE (Rancher Kubernetes Engine)
+
+O RKE é uma distribuição Kubernetes com certificação CNCF que resolve complexidades de instalação comuns do Kubernetes, removendo a maioria das dependências de host, apresentando um caminho estável para implantação, atualizações e reversões.
 
 ```sh
 $ curl -LO https://github.com/rancher/rke/releases/download/v1.2.7/rke_linux-amd64
@@ -81,7 +83,7 @@ $ rke --version
 
 COPIAR rancher-cluster.yml para Servidor
 
-USAR user ubuntu
+Utilizar o user "ubuntu"
 
 ```sh
 $ ssh-keygen
@@ -93,7 +95,6 @@ Copiar a chave gerada para os outros hosts.
 ```sh
 $ ssh-copy-id username@remote_host
 ```
-
 
 # Rodar RKE
 
@@ -112,6 +113,8 @@ $ kubectl get pods --all-namespaces
 # Salvar os Arquivos
 
 # Instalar HELM
+
+O Helm é uma ferramenta de empacotamento de software livre que ajuda você a instalar e gerenciar o ciclo de vida de aplicativos kubernetes. ... Assim como os gerenciadores de pacotes do Linux, como apt e yum, o Helm é usado para gerenciar os gráficos do kubernetes, que são pacotes de recursos kubernetes pré-configurados
 
 ```sh 
 $ curl -LO https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz
@@ -257,6 +260,8 @@ DevOps Ninja: Docker, Kubernetes e Rancher
 https://www.udemy.com/course/devops-mao-na-massa-docker-kubernetes-rancher
 
 https://github.com/jonathanbaraldi
+
+Digo de passagem um ótimo curso, recomendo que se tiver oportunidade faça, pois a parte dos extras é SHOW de bola.
 
 # License
 
