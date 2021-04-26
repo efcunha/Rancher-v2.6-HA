@@ -148,7 +148,7 @@ $ kubectl get pods --namespace cert-manager
 ```sh 
 $ helm install rancher rancher-stable/rancher \
   --namespace cattle-system \
-  --set hostname=rancher.tcemt.tc.br
+  --set hostname=rancher.xxxx.xx.br
 ```
 
 # Verificar deployment
