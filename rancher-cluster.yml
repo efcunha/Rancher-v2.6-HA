@@ -1,11 +1,11 @@
 nodes:
-  - address: 18.206.46.208
+  - address: 172.16.0.13
     user: ubuntu
     role: [controlplane, worker, etcd]
-  - address: 3.237.96.159
+  - address: 172.16.0.14
     user: ubuntu
     role: [controlplane, worker, etcd]
-  - address: 34.234.225.242
+  - address: 172.16.0.15
     user: ubuntu
     role: [controlplane, worker, etcd]
 
