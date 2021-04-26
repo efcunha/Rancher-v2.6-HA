@@ -77,7 +77,6 @@ $ mv rke_linux-amd64 rke
 $ chmod +x rke
 $ mv ./rke /usr/local/bin/rke
 $ rke --version
-$ exit
 ```
 
 COPIAR rancher-cluster.yml para Servidor
