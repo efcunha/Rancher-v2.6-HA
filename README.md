@@ -4,6 +4,8 @@ Repositorio usado para mostrar instalação do Rancher em HA.
 
 https://rancher.com/docs/rancher/v2.x/en/installation/how-ha-works/
 
+![rancher-kubernetes-producao](https://user-images.githubusercontent.com/52961166/116142266-b4eb4980-a6a7-11eb-88d3-07d2e801d887.png)
+
 ## Requisitos
 
 1 DNS
@@ -170,6 +172,7 @@ https://rancher.com/docs/rancher/v2.x/en/troubleshooting/kubernetes-components/e
 
 https://rancher.com/learning-paths/building-a-highly-available-kubernetes-cluster/
 
+![k8s-distribuicao](https://user-images.githubusercontent.com/52961166/116142334-c7fe1980-a6a7-11eb-9c5d-ada6611b2363.png)
 
 ## Requisitos
 
