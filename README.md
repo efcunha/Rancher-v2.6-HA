@@ -1,6 +1,6 @@
 # Rancher v2.5 Kubernetes - Alta Disponibilidade
 
-Repositorio usado para mostrar instalação do Rancher em HA.
+Repositório utilizado para mostrar a instalação do Rancher em HA.
 
 https://rancher.com/docs/rancher/v2.x/en/installation/how-ha-works/
 
