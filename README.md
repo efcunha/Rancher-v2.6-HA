@@ -19,13 +19,9 @@ Utilizado na demonstração: UBUNTU 21.04
 ```sh
 $ sudo apt update
 $ sudo apt install apt-transport-https ca-certificates curl software-properties-common
-$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-$ sudo apt update
-$ apt-cache policy docker-ce
-$ sudo apt install docker-ce
-$ sudo systemctl status docker
-$ sudo usermod -aG docker ubuntu
+$ sudo su
+$ curl https://releases.rancher.com/install-docker/20.10.sh | sh
+$ usermod -aG docker ubuntu
 ```
 
 ## Portas
@@ -195,12 +191,8 @@ Usando na demonstração: UBUNTU 21.04
 ```sh
 $ sudo apt update
 $ sudo apt install apt-transport-https ca-certificates curl software-properties-common
-$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-$ sudo apt update
-$ apt-cache policy docker-ce
-$ sudo apt install docker-ce
-$ sudo systemctl status docker
+$ sudo su
+$ curl https://releases.rancher.com/install-docker/20.10.sh | sh
 $ sudo usermod -aG docker ubuntu
 ```
 
@@ -214,23 +206,23 @@ Adicionar novo cluster com Existing Nodes
 #ETCD
 # Processador= 4 / Memória= 10
 
-$ ssh ubuntu@172.16.0.16   # - etcd01 
-$ ssh ubuntu@172.16.0.17   # - etcd02
-$ ssh ubuntu@172.16.0.18   # - etcd03
+$ ssh ubuntu@172.16.0.14   # - etcd01 
+$ ssh ubuntu@172.16.0.15   # - etcd02
+$ ssh ubuntu@172.16.0.16   # - etcd03
 
 #CONTROLPLANE
 # Processador= 8 / Memória= 8
 
-$ ssh ubuntu@172.16.0.16   # - controlplane01 
-$ ssh ubuntu@172.16.0.16   # - controlplane02
+$ ssh ubuntu@172.16.0.30   # - controlplane01 
+$ ssh ubuntu@172.16.0.31   # - controlplane02
 
 #WORKER
 # Processador/Memória = Onde irá rodar seus Pods
 
-$ ssh ubuntu@172.16.0.16  # - worker01
-$ ssh ubuntu@172.16.0.16  # - worker02
-$ ssh ubuntu@172.16.0.16  # - worker03
-$ ssh ubuntu@172.16.0.16  # - worker04
+$ ssh ubuntu@172.16.0.32  # - worker01
+$ ssh ubuntu@172.16.0.33  # - worker02
+$ ssh ubuntu@172.16.0.34  # - worker03
+$ ssh ubuntu@172.16.0.35  # - worker04
 ```
 
 # Exemplos
