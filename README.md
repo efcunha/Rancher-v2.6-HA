@@ -49,11 +49,11 @@ Instalar o kubectl nela também
 Instalar o RKE nela também.
 
 ```
-$ ssh ubuntu@172.16.0.7    # - NGINX - ELB
+$ ssh ubuntu@172.16.0.11    # - NGINX - ELB
 
-$ ssh ubuntu@172.16.0.27   # - RANCHER-SERVER-1
-$ ssh ubuntu@172.16.0.28   # - RANCHER-SERVER-2
-$ ssh ubuntu@172.16.0.29   # - RANCHER-SERVER-3
+$ ssh ubuntu@172.16.0.13   # - RANCHER-SERVER-1
+$ ssh ubuntu@172.16.0.14   # - RANCHER-SERVER-2
+$ ssh ubuntu@172.16.0.15   # - RANCHER-SERVER-3
 ```
 
 # Instalar Kubectl
