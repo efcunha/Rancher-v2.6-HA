@@ -213,16 +213,16 @@ $ ssh ubuntu@172.16.0.16   # - etcd03
 #CONTROLPLANE
 # Processador= 8 / Memória= 8
 
-$ ssh ubuntu@172.16.0.30   # - controlplane01 
-$ ssh ubuntu@172.16.0.31   # - controlplane02
+$ ssh ubuntu@172.16.0.19   # - controlplane01 
+$ ssh ubuntu@172.16.0.20   # - controlplane02
 
 #WORKER
 # Processador/Memória = Onde irá rodar seus Pods
 
-$ ssh ubuntu@172.16.0.32  # - worker01
-$ ssh ubuntu@172.16.0.33  # - worker02
-$ ssh ubuntu@172.16.0.34  # - worker03
-$ ssh ubuntu@172.16.0.35  # - worker04
+$ ssh ubuntu@172.16.0.27  # - worker01
+$ ssh ubuntu@172.16.0.28  # - worker02
+$ ssh ubuntu@172.16.0.29  # - worker03
+$ ssh ubuntu@172.16.0.30  # - worker04
 ```
 
 # Exemplos
