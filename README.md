@@ -70,7 +70,7 @@ $ kubectl version --client
 O RKE é uma distribuição Kubernetes com certificação CNCF que resolve complexidades de instalação comuns do Kubernetes, removendo a maioria das dependências de host, apresentando um caminho estável para implantação, atualizações e reversões.
 
 ```sh
-$ curl -LO https://github.com/rancher/rke/releases/download/v1.2.7/rke_linux-amd64
+$ curl -LO https://github.com/rancher/rke/releases/download/v1.2.9/rke_linux-amd64
 $ mv rke_linux-amd64 rke
 $ chmod +x rke
 $ mv ./rke /usr/local/bin/rke
