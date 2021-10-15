@@ -17,11 +17,11 @@ Utilizado na demonstração: UBUNTU 21.04
 ## Docker instalado em todas as máquinas
 
 ```sh
-$ sudo apt update
-$ sudo apt install apt-transport-https ca-certificates curl software-properties-common
-$ sudo su
-$ curl https://releases.rancher.com/install-docker/20.10.sh | sh
-$ usermod -aG docker ubuntu
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+sudo su
+curl https://releases.rancher.com/install-docker/20.10.sh | sh
+usermod -aG docker ubuntu
 ```
 
 ## Portas
@@ -49,20 +49,20 @@ Instalar o kubectl nela também
 Instalar o RKE nela também.
 
 ```
-$ ssh ubuntu@172.16.0.11    # - NGINX - ELB
+ssh ubuntu@172.16.0.11    # - NGINX - ELB
 
-$ ssh ubuntu@172.16.0.13   # - RANCHER-SERVER-1
-$ ssh ubuntu@172.16.0.14   # - RANCHER-SERVER-2
-$ ssh ubuntu@172.16.0.15   # - RANCHER-SERVER-3
+ssh ubuntu@172.16.0.13   # - RANCHER-SERVER-1
+ssh ubuntu@172.16.0.14   # - RANCHER-SERVER-2
+ssh ubuntu@172.16.0.15   # - RANCHER-SERVER-3
 ```
 
 # Instalar Kubectl
 
 ```sh
-$ curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-$ chmod +x ./kubectl
-$ mv ./kubectl /usr/local/bin/kubectl
-$ kubectl version --client
+curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x ./kubectl
+mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client
 ```
 
 # Instalar RKE (Rancher Kubernetes Engine)
@@ -70,11 +70,11 @@ $ kubectl version --client
 O RKE é uma distribuição Kubernetes com certificação CNCF que resolve complexidades de instalação comuns do Kubernetes, removendo a maioria das dependências de host, apresentando um caminho estável para implantação, atualizações e reversões.
 
 ```sh
-$ curl -LO https://github.com/rancher/rke/releases/download/v1.2.9/rke_linux-amd64
-$ mv rke_linux-amd64 rke
-$ chmod +x rke
-$ mv ./rke /usr/local/bin/rke
-$ rke --version
+curl -LO https://github.com/rancher/rke/releases/download/v1.2.9/rke_linux-amd64
+mv rke_linux-amd64 rke
+chmod +x rke
+mv ./rke /usr/local/bin/rke
+rke --version
 ```
 
 COPIAR rancher-cluster.yml para Servidor
@@ -82,28 +82,28 @@ COPIAR rancher-cluster.yml para Servidor
 Utilizar o user "ubuntu"
 
 ```sh
-$ ssh-keygen
-$ vi ~/.ssh/id_rsa
-$ chmod 600 /home/ubuntu/.ssh/id_rsa
+ssh-keygen
+vi ~/.ssh/id_rsa
+chmod 600 /home/ubuntu/.ssh/id_rsa
 ```
 Copiar a chave gerada para os outros hosts.
 
 ```sh
-$ ssh-copy-id username@remote_host
+ssh-copy-id username@remote_host
 ```
 
 # Rodar RKE
 
 ```sh
-$ rke up --config ./rancher-cluster.yml
+rke up --config ./rancher-cluster.yml
 ```
 
 # Após o cluster subir:...
 
 ```sh
-$ export KUBECONFIG=$(pwd)/kube_config_rancher-cluster.yml
-$ kubectl get nodes
-$ kubectl get pods --all-namespaces
+export KUBECONFIG=$(pwd)/kube_config_rancher-cluster.yml
+kubectl get nodes
+kubectl get pods --all-namespaces
 ```
 
 # Salvar os Arquivos
@@ -113,57 +113,57 @@ $ kubectl get pods --all-namespaces
 O Helm é uma ferramenta de empacotamento de software livre que ajuda você a instalar e gerenciar o ciclo de vida de aplicativos kubernetes. ... Assim como os gerenciadores de pacotes do Linux, como apt e yum, o Helm é usado para gerenciar os gráficos do kubernetes, que são pacotes de recursos kubernetes pré-configurados
 
 ```sh 
-$ curl -LO https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz
-$ tar -zxvf helm-v3.3.1-linux-amd64.tar.gz
-$ sudo mv linux-amd64/helm /usr/local/bin/helm
+curl -LO https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz
+tar -zxvf helm-v3.3.1-linux-amd64.tar.gz
+sudo mv linux-amd64/helm /usr/local/bin/helm
 ```
 
 # Instalar o Rancher - Preparar
 
 ```sh 
-$ helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
-$ kubectl create namespace cattle-system
+helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
+kubectl create namespace cattle-system
 ```
 
 # Certificate Manager
 
 ```sh 
-$ kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml
-$ kubectl create namespace cert-manager
-$ helm repo add jetstack https://charts.jetstack.io
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml
+kubectl create namespace cert-manager
+helm repo add jetstack https://charts.jetstack.io
 
-$ helm repo update
-$ helm install \
+helm repo update
+helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --version v0.15.0
 
-$ kubectl get pods --namespace cert-manager
+kubectl get pods --namespace cert-manager
 ```
 
 # Instalar Rancher
 
 ```sh 
-$ helm install rancher rancher-stable/rancher \
-  --namespace cattle-system \
-  --set hostname=rancher.xxxx.xx.br
+helm install rancher rancher-stable/rancher \
+--namespace cattle-system \
+--set hostname=rancher.xxxx.xx.br
 ```
 
 # Verificar deployment
 
 ```sh 
-$ kubectl -n cattle-system rollout status deploy/rancher
-$ kubectl -n cattle-system get deploy rancher
+kubectl -n cattle-system rollout status deploy/rancher
+kubectl -n cattle-system get deploy rancher
 ```
 
 # Rodar o Nginx
 
 ```sh 
-$ sudo vi /etc/nginx.conf
-$ docker run -d --restart=unless-stopped \
-  -p 80:80 -p 443:443 \
-  -v /etc/nginx.conf:/etc/nginx/nginx.conf \
-  nginx:1.14
+sudo vi /etc/nginx.conf
+docker run -d --restart=unless-stopped \
+-p 80:80 -p 443:443 \
+-v /etc/nginx.conf:/etc/nginx/nginx.conf \
+nginx:1.14
 ```
 
 # Kubernetes-HA - Alta Disponibilidade
@@ -189,11 +189,11 @@ Usando na demonstração: UBUNTU 21.04
 ## Docker instalado em todas as máquinas
 
 ```sh
-$ sudo apt update
-$ sudo apt install apt-transport-https ca-certificates curl software-properties-common
-$ sudo su
-$ curl https://releases.rancher.com/install-docker/20.10.sh | sh
-$ sudo usermod -aG docker ubuntu
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+sudo su
+curl https://releases.rancher.com/install-docker/20.10.sh | sh
+sudo usermod -aG docker ubuntu
 ```
 
 ## INICIO
@@ -206,23 +206,23 @@ Adicionar novo cluster com Existing Nodes
 #ETCD
 # Processador= 4 / Memória= 10
 
-$ ssh ubuntu@172.16.0.14   # - etcd01 
-$ ssh ubuntu@172.16.0.15   # - etcd02
-$ ssh ubuntu@172.16.0.16   # - etcd03
+ssh ubuntu@172.16.0.14   # - etcd01 
+ssh ubuntu@172.16.0.15   # - etcd02
+ssh ubuntu@172.16.0.16   # - etcd03
 
 #CONTROLPLANE
 # Processador= 8 / Memória= 8
 
-$ ssh ubuntu@172.16.0.19   # - controlplane01 
-$ ssh ubuntu@172.16.0.20   # - controlplane02
+ssh ubuntu@172.16.0.19   # - controlplane01 
+ssh ubuntu@172.16.0.20   # - controlplane02
 
 #WORKER
 # Processador/Memória = Onde irá rodar seus Pods
 
-$ ssh ubuntu@172.16.0.27  # - worker01
-$ ssh ubuntu@172.16.0.28  # - worker02
-$ ssh ubuntu@172.16.0.29  # - worker03
-$ ssh ubuntu@172.16.0.30  # - worker04
+ssh ubuntu@172.16.0.27  # - worker01
+ssh ubuntu@172.16.0.28  # - worker02
+ssh ubuntu@172.16.0.29  # - worker03
+ssh ubuntu@172.16.0.30  # - worker04
 ```
 
 # Exemplos
