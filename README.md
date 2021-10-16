@@ -142,7 +142,7 @@ kubectl -n cattle-system get deploy rancher
 openssl x509 -in tls.crt -out input.der -outform DER
 openssl x509 -in input.der -inform DER -out cacerts.pem -outform PEM
 ```
-# Create/update the certificate secret resource
+# Create the certificate secret resource
 ```sh
 kubectl -n cattle-system create secret tls tls-rancher-ingress --cert=./tls.crt --key=./tls.key 
 ```
@@ -153,7 +153,7 @@ kubectl -n cattle-system create secret tls tls-rancher-ingress \
   --key=tls.key \
   --dry-run --save-config -o yaml | kubectl apply -f -
 ```
-# Create/update the CA certificate secret resource
+# Create the CA certificate secret resource
 ```sh
 kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 ```
