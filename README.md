@@ -141,8 +141,6 @@ kubectl -n cattle-system get deploy rancher
 ```sh
 openssl x509 -in tls.crt -out input.der -outform DER
 openssl x509 -in input.der -inform DER -out cacerts.pem -outform PEM
-
-kubectl create namespace cattle-system
 ```
 # Create/update the certificate secret resource
 ```sh
