@@ -1,4 +1,4 @@
-# Rancher v2.5 Kubernetes - Alta Disponibilidade
+# Rancher v2.6 Kubernetes - Alta Disponibilidade
 
 Repositório utilizado para mostrar a instalação do Rancher em HA.
 
@@ -15,7 +15,6 @@ https://rancher.com/docs/rancher/v2.x/en/installation/how-ha-works/
 Utilizado na demonstração: UBUNTU 21.04
 
 ## Docker instalado em todas as máquinas
-
 ```sh
 sudo apt update
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
@@ -23,7 +22,6 @@ sudo su
 curl https://releases.rancher.com/install-docker/20.10.sh | sh
 usermod -aG docker ubuntu
 ```
-
 ## Portas
 
 https://rancher.com/docs/rancher/v2.x/en/installation/requirements/ports/
@@ -55,20 +53,16 @@ ssh ubuntu@172.16.0.13   # - RANCHER-SERVER-1
 ssh ubuntu@172.16.0.14   # - RANCHER-SERVER-2
 ssh ubuntu@172.16.0.15   # - RANCHER-SERVER-3
 ```
-
 # Instalar Kubectl
-
 ```sh
 curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 kubectl version --client
 ```
-
 # Instalar RKE (Rancher Kubernetes Engine)
 
 O RKE é uma distribuição Kubernetes com certificação CNCF que resolve complexidades de instalação comuns do Kubernetes, removendo a maioria das dependências de host, apresentando um caminho estável para implantação, atualizações e reversões.
-
 ```sh
 curl -LO https://github.com/rancher/rke/releases/download/v1.2.9/rke_linux-amd64
 mv rke_linux-amd64 rke
@@ -76,7 +70,6 @@ chmod +x rke
 mv ./rke /usr/local/bin/rke
 rke --version
 ```
-
 COPIAR rancher-cluster.yml para Servidor
 
 Utilizar o user "ubuntu"
@@ -87,25 +80,20 @@ vi ~/.ssh/id_rsa
 chmod 600 /home/ubuntu/.ssh/id_rsa
 ```
 Copiar a chave gerada para os outros hosts.
-
 ```sh
 ssh-copy-id username@remote_host
 ```
-
 # Rodar RKE
 
 ```sh
 rke up --config ./rancher-cluster.yml
 ```
-
 # Após o cluster subir:...
-
 ```sh
 export KUBECONFIG=$(pwd)/kube_config_rancher-cluster.yml
 kubectl get nodes
 kubectl get pods --all-namespaces
 ```
-
 # Salvar os Arquivos
 
 # Instalar HELM
@@ -117,15 +105,13 @@ curl -LO https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz
 tar -zxvf helm-v3.3.1-linux-amd64.tar.gz
 sudo mv linux-amd64/helm /usr/local/bin/helm
 ```
-
 # Instalar o Rancher - Preparar
 
 ```sh 
 helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
 kubectl create namespace cattle-system
 ```
-
-# Certificate Manager
+# Certificate utilizando o Manager
 
 ```sh 
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml
@@ -140,21 +126,73 @@ helm install \
 
 kubectl get pods --namespace cert-manager
 ```
-
 # Instalar Rancher
-
 ```sh 
 helm install rancher rancher-stable/rancher \
 --namespace cattle-system \
 --set hostname=rancher.xxxx.xx.br
 ```
-
 # Verificar deployment
-
 ```sh 
 kubectl -n cattle-system rollout status deploy/rancher
 kubectl -n cattle-system get deploy rancher
 ```
+# Instalar Rancher Com Certificado TLS
+```sh
+openssl x509 -in tls.crt -out input.der -outform DER
+openssl x509 -in input.der -inform DER -out cacerts.pem -outform PEM
+
+kubectl create namespace cattle-system
+```
+# Create/update the certificate secret resource
+```sh
+kubectl -n cattle-system create secret tls tls-rancher-ingress --cert=./tls.crt --key=./tls.key 
+```
+# Como alternativa, para atualizar uma chave de um certificado existente: 
+```sh
+kubectl -n cattle-system create secret tls tls-rancher-ingress \
+  --cert=tls.crt \
+  --key=tls.key \
+  --dry-run --save-config -o yaml | kubectl apply -f -
+```
+# Create/update the CA certificate secret resource
+```sh
+kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
+```
+# Para atualizar um certificado existente tls-ca secret:
+```sh
+kubectl -n cattle-system create secret generic tls-ca \
+  --from-file=cacerts.pem \
+  --dry-run --save-config -o yaml | kubectl apply -f -
+```
+# Atualizar Rancher
+```sh
+helm install rancher rancher-stable/rancher \
+  --namespace cattle-system \
+  --set hostname=rancher.tcemt.tc.br \
+  --set ingress.tls.source=secret \
+  --set privateCA=true
+
+kubectl -n cattle-system rollout status deploy/rancher
+
+kubectl -n cattle-system get deploy rancher
+```
+# Reconfigure the Rancher deployment
+```sh
+helm get values rancher -n cattle-system
+
+helm ls -A
+
+helm upgrade rancher rancher-stable/rancher \
+  --namespace cattle-system \
+  --version <DEPLOYED_CHART_VERSION> \
+  --set hostname=rancher.my.org \
+  --set ingress.tls.source=secret \
+  --set privateCA=true
+```
+# Link com mais informações
+
+https://rancher.com/docs/rancher/v2.5/en/installation/resources/update-ca-cert/
 
 # Rodar o Nginx
 
