@@ -195,11 +195,11 @@ https://rancher.com/docs/rancher/v2.5/en/installation/resources/update-ca-cert/
 # Rodar o Nginx
 
 ```sh 
-sudo vi /etc/nginx.conf
-docker run -d --restart=unless-stopped \
--p 80:80 -p 443:443 \
--v /etc/nginx.conf:/etc/nginx/nginx.conf \
-nginx:1.14
+cd nginx
+docker build -t nginx-alpine .
+docker images
+docker run -d --restart=unless-stopped -p 80:80-p 443:443 nginx-alpine:latest
+docker run -t -i nginx-alpine /bin/bash
 ```
 
 # Kubernetes-HA - Alta Disponibilidade
