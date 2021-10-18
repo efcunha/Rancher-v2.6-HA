@@ -163,7 +163,7 @@ kubectl -n cattle-system create secret generic tls-ca \
   --from-file=cacerts.pem \
   --dry-run --save-config -o yaml | kubectl apply -f -
 ```
-# Atualizar Rancher
+# Instalar Rancher
 ```sh
 helm install rancher rancher-stable/rancher \
   --namespace cattle-system \
