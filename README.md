@@ -216,9 +216,9 @@ https://rancher.com/learning-paths/building-a-highly-available-kubernetes-cluste
 
 Cluster Kubernetes HA de Produção
 
-3 instâncias para ETCD         - Podendo perder 1
-2 instâncias para CONTROLPLANE - Podendo perder 1
-4 instâncias para WORKER       - Podendo perder todas
+# 3 instâncias para ETCD         - Podendo perder 1
+# 2 instâncias para CONTROLPLANE - Podendo perder 1
+# 4 instâncias para WORKER       - Podendo perder todas
 
 Usando na demonstração: UBUNTU 21.04
 
