@@ -297,7 +297,8 @@ Consulte este repositório para obter detalhes de implementação.
 
 Obter informações do repositório 
 
-https://rancher.com/docs/rancher/v2.6/en/backups/#installing-rancher-backup-with-the-helm-cli
+Acesse a [pagina](https://rancher.com/docs/rancher/v2.6/en/backups/#installing-rancher-backup-with-the-helm-cli)
+
 ```sh
 helm repo add rancher-chart https://charts.rancher.io
 helm repo update
