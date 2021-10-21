@@ -285,7 +285,9 @@ ssh ubuntu@172.16.0.30  # - worker04
 ```
 # Configurando o Traefik 2.X como Ingress
 
-Configuração traefik 2.x com TLS [pagina](https://github.com/efcunha/Traefik-v2-TLS)
+Configuração traefik 2.x com TLS 
+
+Acesse a [pagina](https://github.com/efcunha/Traefik-v2-TLS)
 
 # Rancher Backup 
 
