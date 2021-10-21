@@ -216,9 +216,14 @@ https://rancher.com/learning-paths/building-a-highly-available-kubernetes-cluste
 
 Cluster Kubernetes HA de Produção
 
-# 3 instâncias para ETCD         - Podendo perder 1
-# 2 instâncias para CONTROLPLANE - Podendo perder 1
-# 4 instâncias para WORKER       - Podendo perder todas
+3 instâncias para ETCD         
+  - Podendo perder 1
+
+2 instâncias para CONTROLPLANE 
+  - Podendo perder 1
+
+4 instâncias para WORKER       
+  - Podendo perder todas
 
 Usando na demonstração: UBUNTU 21.04
 
@@ -278,6 +283,101 @@ ssh ubuntu@172.16.0.30  # - worker04
 
 # docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name worker-2 --worker
 ```
+
+# Rancher Backup 
+
+Este chart oferece a capacidade de fazer backup e restaurar o aplicativo Rancher em execução em qualquer cluster do Kubernetes.
+
+Consulte este repositório para obter detalhes de implementação.
+
+Obter informações do repositório 
+
+https://rancher.com/docs/rancher/v2.6/en/backups/#installing-rancher-backup-with-the-helm-cli
+```sh
+helm repo add rancher-chart https://charts.rancher.io
+helm repo update
+
+Install Chart
+helm install rancher-backup-crd rancher-chart/rancher-backup-crd -n cattle-resources-system --create-namespace 
+helm install rancher-backup rancher-chart/rancher-backup -n cattle-resources-system -f values.yaml
+```
+Configuração de local de armazenamento padrão
+
+Configure um local de armazenamento onde todos os backups são salvos por padrão. 
+Você terá a opção de substituir isso com cada backup, mas estará limitado a usar um armazenamento de objeto compatível com S3 ou Minio.
+
+Para obter informações sobre como configurar essas opções, consulte esta página(https://rancher.com/docs/rancher/v2.6/en/backups/configuration/storage-config/).
+
+Exemplo de values.yaml para o Helm Chart de backup do Rancher
+
+O exemplo values.yaml(https://rancher.com/docs/rancher/v2.6/en/backups/configuration/storage-config/#example-values-yaml-for-the-rancher-backup-helm-chart) O arquivo pode ser usado para configurar o operador de backup do rancher quando o Helm CLI é usado para instalá-lo. 
+
+nano values.yaml
+```sh
+image:
+  repository: rancher/backup-restore-operator
+  tag: v2.0.1
+
+## Default s3 bucket for storing all backup files created by the rancher-backup operator
+s3:
+  enabled: false
+  ## credentialSecretName if set, should be the name of the Secret containing AWS credentials.
+  ## To use IAM Role, don't set this field
+  credentialSecretName: creds 
+  credentialSecretNamespace: ""
+  region: us-west-2
+  bucketName: rancherbackups
+  folder: base folder
+  endpoint: s3.us-west-2.amazonaws.com
+  endpointCA: base64 encoded CA cert
+  # insecureTLSSkipVerify: optional
+
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+## If persistence is enabled, operator will create a PVC with mountPath /var/lib/backups
+persistence: 
+  enabled: true
+
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack). 
+  ## Refer to https://kubernetes.io/docs/concepts/storage/persistent-volumes/#class-1
+  ##
+  storageClass: "managed-nfs-storage"
+
+  ## If you want to disable dynamic provisioning by setting storageClass to "-" above, 
+  ## and want to target a particular PV, provide name of the target volume 
+  volumeName: ""
+
+  ## Only certain StorageClasses allow resizing PVs; Refer to https://kubernetes.io/blog/2018/07/12/resizing-persistent-volumes-using-kubernetes/
+  size: 100Gi
+
+global:
+  cattle:
+    systemDefaultRegistry: ''
+  kubectl:
+    repository: rancher/kubectl
+    tag: v1.20.2
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+```
+
+Upgrading Chart
+```sh
+helm upgrade rancher-backup-crd -n cattle-resources-system
+helm upgrade rancher-backup -n cattle-resources-system 
+```
+```sh
+Uninstall Chart
+helm uninstall rancher-backup -n cattle-resources-system
+helm uninstall rancher-backup-crd -n cattle-resources-system
+```
+Para mais informação acesse aqui(https://rancher.com/docs/rancher/v2.6/en/backups/).
 
 ## Agradecimentos:
 
