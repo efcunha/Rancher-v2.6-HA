@@ -190,7 +190,7 @@ helm upgrade rancher rancher-stable/rancher \
 ```
 # Link com mais informações
 
-https://rancher.com/docs/rancher/v2.5/en/installation/resources/update-ca-cert/
+Acesse a [pagina](https://rancher.com/docs/rancher/v2.5/en/installation/resources/update-ca-cert/)
 
 # Rodar o Nginx
 
