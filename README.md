@@ -306,11 +306,11 @@ Configuração de local de armazenamento padrão
 Configure um local de armazenamento onde todos os backups são salvos por padrão. 
 Você terá a opção de substituir isso com cada backup, mas estará limitado a usar um armazenamento de objeto compatível com S3 ou Minio.
 
-Para obter informações sobre como configurar essas opções, consulte esta página(https://rancher.com/docs/rancher/v2.6/en/backups/configuration/storage-config/).
+Para obter informações sobre como configurar essas opções, consulte esta [página](https://rancher.com/docs/rancher/v2.6/en/backups/configuration/storage-config/).
 
 Exemplo de values.yaml para o Helm Chart de backup do Rancher
 
-O exemplo values.yaml(https://rancher.com/docs/rancher/v2.6/en/backups/configuration/storage-config/#example-values-yaml-for-the-rancher-backup-helm-chart) O arquivo pode ser usado para configurar o operador de backup do rancher quando o Helm CLI é usado para instalá-lo. 
+O exemplo [values.yaml](https://rancher.com/docs/rancher/v2.6/en/backups/configuration/storage-config/#example-values-yaml-for-the-rancher-backup-helm-chart) O arquivo pode ser usado para configurar o operador de backup do rancher quando o Helm CLI é usado para instalá-lo. 
 
 nano values.yaml
 ```sh
@@ -377,7 +377,7 @@ Uninstall Chart
 helm uninstall rancher-backup -n cattle-resources-system
 helm uninstall rancher-backup-crd -n cattle-resources-system
 ```
-Para mais informação acesse aqui(https://rancher.com/docs/rancher/v2.6/en/backups/).
+Para mais informação acesse [aqui](https://rancher.com/docs/rancher/v2.6/en/backups/).
 
 ## Agradecimentos:
 
