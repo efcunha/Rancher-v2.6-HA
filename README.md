@@ -302,8 +302,9 @@ Acesse a [pagina](https://rancher.com/docs/rancher/v2.6/en/backups/#installing-r
 ```sh
 helm repo add rancher-chart https://charts.rancher.io
 helm repo update
-
-Install Chart
+```
+# Install Chart
+```sh
 helm install rancher-backup-crd rancher-chart/rancher-backup-crd -n cattle-resources-system --create-namespace 
 helm install rancher-backup rancher-chart/rancher-backup -n cattle-resources-system -f values.yaml
 ```
