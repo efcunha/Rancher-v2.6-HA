@@ -289,7 +289,7 @@ Configuração traefik 2.x com TLS
 
 Acesse a [pagina](https://github.com/efcunha/Traefik-v2-TLS)
 
-# Rancher Backup 
+# Rancher Backup ou [Kasten K10](https://github.com/efcunha/Kasten-K10)
 
 Este chart oferece a capacidade de fazer backup e restaurar o aplicativo Rancher em execução em qualquer cluster do Kubernetes.
 
