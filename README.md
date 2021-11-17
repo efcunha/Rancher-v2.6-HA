@@ -175,7 +175,7 @@ kubectl -n cattle-system rollout status deploy/rancher
 
 kubectl -n cattle-system get deploy rancher
 ```
-# Reconfigure the Rancher deployment
+# Reconfigure o Rancher deployment
 ```sh
 helm get values rancher -n cattle-system
 
