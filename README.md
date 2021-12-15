@@ -195,11 +195,10 @@ Acesse a [pagina](https://rancher.com/docs/rancher/v2.5/en/installation/resource
 # Rodar o Nginx
 
 ```sh 
-cd nginx
-docker build -t nginx-alpine .
-docker images
-docker run -d --restart=unless-stopped -p 80:80-p 443:443 nginx-alpine:latest
-docker run -t -i nginx-alpine /bin/bash
+docker run -d --restart=unless-stopped \
+-p 80:80 -p 443:443 \
+-v /etc/nginx.conf:/etc/nginx/nginx.conf \
+nginx:latest
 ```
 
 # Kubernetes-HA - Alta Disponibilidade
