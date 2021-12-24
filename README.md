@@ -286,6 +286,37 @@ ssh ubuntu@172.16.0.30  # - worker04
 
 # docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://rancher.org.br --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name worker-2 --worker
 ```
+# RKE2
+
+RKE2, também conhecido como RKE Government, é a distribuição Kubernetes de próxima geração do Rancher.
+
+É uma distribuição do Kubernetes em total conformidade com o foco na segurança e conformidade dentro do setor do governo federal dos EUA.
+
+Para cumprir esses objetivos, RKE2 faz o seguinte:
+
+- Fornece padrões e opções de configuração que permitem que os clusters sejam aprovados no CIS Kubernetes Benchmark v1.5 ou v1.6 com intervenção mínima do operador
+- Permite conformidade com FIPS 140-2
+- Verifica regularmente os componentes em busca de CVEs usando trivy em nosso pipeline de construção
+
+Qual é a diferença entre RKE ou K3s? 
+
+O RKE2 combina o melhor dos dois mundos da versão 1.x do RKE (doravante referido como RKE1) e K3s.
+
+Do K3s, ele herda a usabilidade, facilidade de operações e modelo de implantação.
+
+Do RKE1, ele herda o alinhamento próximo com o Kubernetes upstream. 
+
+Em alguns lugares, o K3s divergiu do Kubernetes upstream para otimizar as implantações de borda, mas RKE1 e RKE2 podem ficar estreitamente alinhados com o upstream.
+
+É importante ressaltar que o RKE2 não depende do Docker como o RKE1. 
+O RKE1 aproveitou o Docker para implantar e gerenciar os componentes do plano de controle, bem como o tempo de execução do contêiner para Kubernetes. 
+O RKE2 lança os componentes do plano de controle como pods estáticos, gerenciados pelo kubelet. 
+O tempo de execução do contêiner integrado é containerd.
+
+Por que dois nomes? 
+
+Ele é conhecido como RKE Government para transmitir os principais casos de uso e o setor que ele visa atualmente.
+
 # Exemplos RKE2
 
 ```sh
