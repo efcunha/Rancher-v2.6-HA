@@ -288,6 +288,8 @@ ssh ubuntu@172.16.0.30  # - worker04
 ```
 # RKE2
 
+![download](https://user-images.githubusercontent.com/52961166/147371979-ccde6410-88e8-478a-a9e2-8d493338b370.jpg)
+
 RKE2, também conhecido como RKE Government, é a distribuição Kubernetes de próxima geração do Rancher.
 
 É uma distribuição do Kubernetes em total conformidade com o foco na segurança e conformidade dentro do setor do governo federal dos EUA.
