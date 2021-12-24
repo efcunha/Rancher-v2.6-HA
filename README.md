@@ -12,7 +12,7 @@ https://rancher.com/docs/rancher/v2.x/en/installation/how-ha-works/
 1 máquina para load balancer
 3 máquinas para o rancher-server
 
-Utilizado na demonstração: UBUNTU 21.04
+Utilizado na demonstração: UBUNTU 20.04 LTS
 
 ## Docker instalado em todas as máquinas
 ```sh
