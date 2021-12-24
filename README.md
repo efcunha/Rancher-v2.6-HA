@@ -319,6 +319,8 @@ Ele é conhecido como RKE Government para transmitir os principais casos de uso 
 
 # Exemplos RKE2
 
+![rke2](https://user-images.githubusercontent.com/52961166/147371934-68f97b9e-f93d-4206-9b4d-4df72c299aed.png)
+
 ```sh
 --etcd --controlplane --worker
 
