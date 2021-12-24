@@ -19,7 +19,7 @@ Utilizado na demonstração: UBUNTU 21.04
 sudo apt update
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
 sudo su
-curl https://releases.rancher.com/install-docker/20.10.sh | sh
+curl https://releases.rancher.com/install-docker/20.10.sh | sudo bash -
 usermod -aG docker ubuntu
 ```
 ## Portas
@@ -54,20 +54,22 @@ ssh ubuntu@172.16.0.14   # - RANCHER-SERVER-2
 ssh ubuntu@172.16.0.15   # - RANCHER-SERVER-3
 ```
 # Instalar Kubectl
+### Linux ###
 ```sh
-curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 chmod +x ./kubectl
-mv ./kubectl /usr/local/bin/kubectl
-kubectl version --client
+sudo mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client```
 ```
+
 # Instalar RKE (Rancher Kubernetes Engine)
 
 O RKE é uma distribuição Kubernetes com certificação CNCF que resolve complexidades de instalação comuns do Kubernetes, removendo a maioria das dependências de host, apresentando um caminho estável para implantação, atualizações e reversões.
+### Linux ###
 ```sh
-curl -LO https://github.com/rancher/rke/releases/download/v1.2.9/rke_linux-amd64
-mv rke_linux-amd64 rke
-chmod +x rke
-mv ./rke /usr/local/bin/rke
+curl -s https://api.github.com/repos/rancher/rke/releases/latest | grep download_url | grep amd64 | cut -d '"' -f 4 | wget -qi -
+chmod +x rke_linux-amd64
+sudo mv rke_linux-amd64 /usr/local/bin/rke
 rke --version
 ```
 COPIAR rancher-cluster.yml para Servidor
@@ -99,11 +101,11 @@ kubectl get pods --all-namespaces
 # Instalar HELM
 
 O Helm é uma ferramenta de empacotamento de software livre que ajuda você a instalar e gerenciar o ciclo de vida de aplicativos kubernetes. ... Assim como os gerenciadores de pacotes do Linux, como apt e yum, o Helm é usado para gerenciar os gráficos do kubernetes, que são pacotes de recursos kubernetes pré-configurados
-
+### Linux ###
 ```sh 
-curl -LO https://get.helm.sh/helm-v3.3.1-linux-amd64.tar.gz
-tar -zxvf helm-v3.3.1-linux-amd64.tar.gz
-sudo mv linux-amd64/helm /usr/local/bin/helm
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
 ```
 # Instalar o Rancher - Preparar
 
@@ -114,17 +116,19 @@ kubectl create namespace cattle-system
 # Certificate utilizando o Manager
 
 ```sh 
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.0/cert-manager.crds.yaml
-kubectl create namespace cert-manager
-helm repo add jetstack https://charts.jetstack.io
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.0.4/cert-manager.crds.yaml
 
+kubectl create namespace cert-manager
+
+helm repo add jetstack https://charts.jetstack.io
 helm repo update
+
 helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
-  --version v0.15.0
+  --version v1.0.4
 
-kubectl get pods --namespace cert-manager
+kubectl get pods -n cert-manager
 ```
 # Instalar Rancher
 ```sh 
@@ -167,7 +171,7 @@ kubectl -n cattle-system create secret generic tls-ca \
 ```sh
 helm upgrade --install rancher rancher-stable/rancher \
   --namespace cattle-system \
-  --set hostname=rancher.tcemt.tc.br \
+  --set hostname=rancher.my.org \
   --set ingress.tls.source=secret \
   --set privateCA=true
 
@@ -265,23 +269,35 @@ ssh ubuntu@172.16.0.29  # - worker03
 ssh ubuntu@172.16.0.30  # - worker04
 ```
 
-# Exemplos
+# Exemplos RKE
 
 ```sh
-# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name etcd-1 --etcd
+# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://rancher.org.br --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name etcd-1 --etcd
 
 # docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name etcd-2 --etcd
 
-# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name etcd-3 --etcd
+# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://rancher.org.br --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name etcd-3 --etcd
 
-# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name controlplane-1 --controlplane
+# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://rancher.org.br --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name controlplane-1 --controlplane
 
-# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name controlplane-2 --controlplane
+# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://rancher.org.br --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name controlplane-2 --controlplane
 
-# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name worker-1 --worker
+# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://rancher.org.br --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name worker-1 --worker
 
-# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://3.227.241.169 --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name worker-2 --worker
+# docker run -d --privileged --restart=unless-stopped --net=host -v /etc/kubernetes:/etc/kubernetes -v /var/run:/var/run rancher/rancher-agent:v2.5.0 --server https://rancher.org.br --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum 7c481267daae071cd8ad8a9dd0f4c5261038889eccbd1a8e7b0aa1434053731b --node-name worker-2 --worker
 ```
+# Exemplos RKE2
+
+```sh
+--etcd --controlplane --worker
+
+curl -fL --insecure https://rancher.org.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.tcemt.tc.br --label 'cattle.io/os=linux' --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum c9ce43df5750df92e44a1b3c2a74c8df165e77b76ad80a626b313196064bf4ef --etcd --node-name etcd01
+
+curl -fL --insecure https://rancher.org.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.tcemt.tc.br --label 'cattle.io/os=linux' --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum c9ce43df5750df92e44a1b3c2a74c8df165e77b76ad80a626b313196064bf4ef --etcd --node-name etcd02
+
+curl -fL --insecure https://rancher.org.br/system-agent-install.sh | sudo  sh -s - --server https://rancher.tcemt.tc.br --label 'cattle.io/os=linux' --token zw9dgzb99n7fkg7l7lsb4wn6p49gmhcfjdp9chpzllzgpnjg9gv967 --ca-checksum c9ce43df5750df92e44a1b3c2a74c8df165e77b76ad80a626b313196064bf4ef --etcd --node-name etcd03
+```
+
 # Configurando o Traefik 2.X como Ingress
 
 Configuração traefik 2.x com TLS 
