@@ -1,4 +1,4 @@
-# Rancher v2.6 Kubernetes - RKE2- Alta Disponibilidade
+# Rancher v2.6 - RKE1 - RKE2 - Alta Disponibilidade
 
 Repositório utilizado para mostrar a instalação do Rancher em HA.
 
@@ -9,7 +9,7 @@ https://rancher.com/docs/rancher/v2.x/en/installation/how-ha-works/
 ## Requisitos
 
 1 DNS
-1 máquina para load balancer
+1 máquina para load balancer VIP
 3 máquinas para o rancher-server
 
 Utilizado na demonstração: UBUNTU 20.04 LTS
@@ -54,6 +54,7 @@ ssh ubuntu@172.16.0.14   # - RANCHER-SERVER-2
 ssh ubuntu@172.16.0.15   # - RANCHER-SERVER-3
 ```
 # Instalar Kubectl
+
 ### Linux ###
 ```sh
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
@@ -65,6 +66,7 @@ kubectl version --client```
 # Instalar RKE (Rancher Kubernetes Engine)
 
 O RKE é uma distribuição Kubernetes com certificação CNCF que resolve complexidades de instalação comuns do Kubernetes, removendo a maioria das dependências de host, apresentando um caminho estável para implantação, atualizações e reversões.
+
 ### Linux ###
 ```sh
 curl -s https://api.github.com/repos/rancher/rke/releases/latest | grep download_url | grep amd64 | cut -d '"' -f 4 | wget -qi -
@@ -101,6 +103,7 @@ kubectl get pods --all-namespaces
 # Instalar HELM
 
 O Helm é uma ferramenta de empacotamento de software livre que ajuda você a instalar e gerenciar o ciclo de vida de aplicativos kubernetes. ... Assim como os gerenciadores de pacotes do Linux, como apt e yum, o Helm é usado para gerenciar os gráficos do kubernetes, que são pacotes de recursos kubernetes pré-configurados
+
 ### Linux ###
 ```sh 
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
@@ -137,37 +140,50 @@ helm install rancher rancher-stable/rancher \
 --set hostname=rancher.xxxx.xx.br
 ```
 # Verificar deployment
+
 ```sh 
 kubectl -n cattle-system rollout status deploy/rancher
 kubectl -n cattle-system get deploy rancher
 ```
+
 # Instalar Rancher Com Certificado TLS
+
 ```sh
 openssl x509 -in tls.crt -out input.der -outform DER
 openssl x509 -in input.der -inform DER -out cacerts.pem -outform PEM
 ```
+
 # Create the certificate secret resource
+
 ```sh
 kubectl -n cattle-system create secret tls tls-rancher-ingress --cert=./tls.crt --key=./tls.key 
 ```
+
 # Como alternativa, para atualizar uma chave de um certificado existente: 
+
 ```sh
 kubectl -n cattle-system create secret tls tls-rancher-ingress \
   --cert=tls.crt \
   --key=tls.key \
   --dry-run --save-config -o yaml | kubectl apply -f -
 ```
+
 # Create the CA certificate secret resource
+
 ```sh
 kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 ```
+
 # Para atualizar um certificado existente tls-ca secret:
+
 ```sh
 kubectl -n cattle-system create secret generic tls-ca \
   --from-file=cacerts.pem \
   --dry-run --save-config -o yaml | kubectl apply -f -
 ```
+
 # Instalar Rancher
+
 ```sh
 helm upgrade --install rancher rancher-stable/rancher \
   --namespace cattle-system \
@@ -179,7 +195,9 @@ kubectl -n cattle-system rollout status deploy/rancher
 
 kubectl -n cattle-system get deploy rancher
 ```
+
 # Reconfigure o Rancher deployment
+
 ```sh
 helm get values rancher -n cattle-system
 
@@ -192,11 +210,47 @@ helm upgrade --install rancher rancher-stable/rancher \
   --set ingress.tls.source=secret \
   --set privateCA=true
 ```
+
 # Link com mais informações
 
 Acesse a [pagina](https://rancher.com/docs/rancher/v2.5/en/installation/resources/update-ca-cert/)
 
 # Rodar o Nginx
+
+```sh 
+$ vi /etc/nginx.conf
+
+worker_processes 4;
+worker_rlimit_nofile 40000;
+
+events {
+    worker_connections 8192;
+}
+
+stream {
+    upstream rancher_servers_http {
+        least_conn;
+        server <SERVER1>:80 max_fails=3 fail_timeout=5s;
+        server <SERVER2>:80 max_fails=3 fail_timeout=5s;
+        server <SERVER3>:80 max_fails=3 fail_timeout=5s;
+    }
+    server {
+        listen 80;
+        proxy_pass rancher_servers_http;
+    }
+
+    upstream rancher_servers_https {
+        least_conn;
+        server <SERVER1>:443 max_fails=3 fail_timeout=5s;
+        server <SERVER2>:443 max_fails=3 fail_timeout=5s;
+        server <SERVER3>:443 max_fails=3 fail_timeout=5s;
+    }
+    server {
+        listen     443;
+        proxy_pass rancher_servers_https;
+    }
+}
+```
 
 ```sh 
 docker run -d --restart=unless-stopped \
@@ -244,7 +298,9 @@ sudo usermod -aG docker ubuntu
 
 Abrir o Rancher e criar um novo cluster.
 
-Adicionar novo cluster com Existing Nodes
+Adicionar novo cluster com Existing Nodes 
+
+Podendo ser criado na versão Ramncher 2.6.2 tanto em RKE1 ou RKE2
 
 ```sh
 #ETCD
@@ -425,15 +481,19 @@ affinity: {}
 ```
 
 Upgrading Chart
+
 ```sh
 helm upgrade rancher-backup-crd -n cattle-resources-system
 helm upgrade rancher-backup -n cattle-resources-system 
 ```
+
 Uninstall Chart
+
 ```sh
 helm uninstall rancher-backup -n cattle-resources-system
 helm uninstall rancher-backup-crd -n cattle-resources-system
 ```
+
 Para mais informação acesse [aqui](https://rancher.com/docs/rancher/v2.6/en/backups/).
 
 ## Agradecimentos:
