@@ -22,6 +22,21 @@ sudo su
 curl https://releases.rancher.com/install-docker/20.10.sh | sudo bash -
 usermod -aG docker ubuntu
 ```
+# Instalar Rancher Com Certificado TLS
+
+```sh
+openssl x509 -in tls.crt -out input.der -outform DER
+openssl x509 -in input.der -inform DER -out cacerts.pem -outform PEM
+```
+# Copiar o certificado crt para os hosts
+```sh
+scp tls.crt 172.16.0.13 [14..31]:
+
+ssh 172.16.0.13 [14..31]
+sudo -s
+mv tls.crt /usr/local/share/ca-certificates/
+update-ca-certificates
+```
 ## Portas
 
 https://rancher.com/docs/rancher/v2.x/en/installation/requirements/ports/
@@ -68,12 +83,14 @@ kubectl version --client```
 O RKE é uma distribuição Kubernetes com certificação CNCF que resolve complexidades de instalação comuns do Kubernetes, removendo a maioria das dependências de host, apresentando um caminho estável para implantação, atualizações e reversões.
 
 ### Linux ###
+
 ```sh
 curl -s https://api.github.com/repos/rancher/rke/releases/latest | grep download_url | grep amd64 | cut -d '"' -f 4 | wget -qi -
 chmod +x rke_linux-amd64
 sudo mv rke_linux-amd64 /usr/local/bin/rke
 rke --version
 ```
+
 COPIAR rancher-cluster.yml para Servidor
 
 Utilizar o user "ubuntu"
@@ -83,21 +100,27 @@ ssh-keygen
 vi ~/.ssh/id_rsa
 chmod 600 /home/ubuntu/.ssh/id_rsa
 ```
+
 Copiar a chave gerada para os outros hosts.
+
 ```sh
 ssh-copy-id username@remote_host
 ```
+
 # Rodar RKE
 
 ```sh
 rke up --config ./rancher-cluster.yml
 ```
+
 # Após o cluster subir:...
+
 ```sh
 export KUBECONFIG=$(pwd)/kube_config_rancher-cluster.yml
 kubectl get nodes
 kubectl get pods --all-namespaces
 ```
+
 # Salvar os Arquivos
 
 # Instalar HELM
@@ -110,13 +133,15 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scr
 chmod 700 get_helm.sh
 ./get_helm.sh
 ```
+
 # Instalar o Rancher - Preparar
 
 ```sh 
 helm repo add rancher-stable https://releases.rancher.com/server-charts/stable
 kubectl create namespace cattle-system
 ```
-# Certificate utilizando o Manager
+
+# Certificate utilizando o Manager (Caso vc tenha os certificados ssl pule esta etapa)
 
 ```sh 
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.0.4/cert-manager.crds.yaml
@@ -133,12 +158,15 @@ helm install \
 
 kubectl get pods -n cert-manager
 ```
+
 # Instalar Rancher
+
 ```sh 
 helm install rancher rancher-stable/rancher \
 --namespace cattle-system \
 --set hostname=rancher.xxxx.xx.br
 ```
+
 # Verificar deployment
 
 ```sh 
@@ -146,17 +174,16 @@ kubectl -n cattle-system rollout status deploy/rancher
 kubectl -n cattle-system get deploy rancher
 ```
 
-# Instalar Rancher Com Certificado TLS
-
-```sh
-openssl x509 -in tls.crt -out input.der -outform DER
-openssl x509 -in input.der -inform DER -out cacerts.pem -outform PEM
-```
-
 # Create the certificate secret resource
 
 ```sh
 kubectl -n cattle-system create secret tls tls-rancher-ingress --cert=./tls.crt --key=./tls.key 
+```
+
+# Create the CA certificate secret resource
+
+```sh
+kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 ```
 
 # Como alternativa, para atualizar uma chave de um certificado existente: 
@@ -166,12 +193,6 @@ kubectl -n cattle-system create secret tls tls-rancher-ingress \
   --cert=tls.crt \
   --key=tls.key \
   --dry-run --save-config -o yaml | kubectl apply -f -
-```
-
-# Create the CA certificate secret resource
-
-```sh
-kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 ```
 
 # Para atualizar um certificado existente tls-ca secret:
@@ -248,6 +269,14 @@ stream {
     server {
         listen     443;
         proxy_pass rancher_servers_https;
+        ssl_certificate /opt/ssl/tls.crt;
+        ssl_certificate_key /opt/ssl/tls.key;
+        ssl_session_cache shared:SSL:10m;
+        ssl_session_timeout 5m;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_prefer_server_ciphers on;
+        ssl_dhparam /opt/ssl/dhparam.pem;
+        ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA256;
     }
 }
 ```
