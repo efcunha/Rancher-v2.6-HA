@@ -1,4 +1,4 @@
-# Rancher v2.6 - RKE1 - RKE2 - Alta Disponibilidade
+# Rancher v2.6 - RKE1/RKE2 - Alta Disponibilidade
 
 Repositório utilizado para mostrar a instalação do Rancher em HA.
 
