@@ -206,7 +206,7 @@ kubectl -n cattle-system create secret generic tls-ca \
 # Instalar Rancher
 
 ```sh
-helm upgrade --install rancher rancher-stable/rancher \
+helm --install rancher rancher-stable/rancher \
   --namespace cattle-system \
   --set hostname=rancher.my.org \
   --set ingress.tls.source=secret \
@@ -224,7 +224,7 @@ helm get values rancher -n cattle-system
 
 helm ls -A
 
-helm upgrade --install rancher rancher-stable/rancher \
+helm upgrade rancher rancher-stable/rancher \
   --namespace cattle-system \
   --version <DEPLOYED_CHART_VERSION> \
   --set hostname=rancher.my.org \
