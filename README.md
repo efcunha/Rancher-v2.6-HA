@@ -185,24 +185,6 @@ kubectl -n cattle-system create secret tls tls-rancher-ingress --cert=./tls.crt 
 ```sh
 kubectl -n cattle-system create secret generic tls-ca --from-file=cacerts.pem
 ```
-
-# Como alternativa, para atualizar uma chave de um certificado existente: 
-
-```sh
-kubectl -n cattle-system create secret tls tls-rancher-ingress \
-  --cert=tls.crt \
-  --key=tls.key \
-  --dry-run --save-config -o yaml | kubectl apply -f -
-```
-
-# Para atualizar um certificado existente tls-ca secret:
-
-```sh
-kubectl -n cattle-system create secret generic tls-ca \
-  --from-file=cacerts.pem \
-  --dry-run --save-config -o yaml | kubectl apply -f -
-```
-
 # Instalar Rancher
 
 ```sh
@@ -217,6 +199,25 @@ kubectl -n cattle-system rollout status deploy/rancher
 kubectl -n cattle-system get deploy rancher
 ```
 
+# Como alternativa, para atualizar uma chave de um certificado existente: 
+
+```sh
+kubectl delete secret -n cattle-system tls-rancher-ingress
+
+kubectl -n cattle-system create secret tls tls-rancher-ingress \
+  --cert=tls.crt \
+  --key=tls.key \
+  --dry-run --save-config -o yaml | kubectl apply -f -
+```
+
+# Para atualizar um certificado existente tls-ca secret:
+
+```sh
+kubectl -n cattle-system create secret generic tls-ca \
+  --from-file=cacerts.pem \
+  --dry-run --save-config -o yaml | kubectl apply -f -
+```
+
 # Reconfigure o Rancher deployment
 
 ```sh
@@ -225,8 +226,8 @@ helm get values rancher -n cattle-system
 helm ls -A
 
 helm upgrade rancher rancher-stable/rancher \
-  --namespace cattle-system \
   --version <DEPLOYED_CHART_VERSION> \
+  --namespace cattle-system \
   --set hostname=rancher.my.org \
   --set ingress.tls.source=secret \
   --set privateCA=true
