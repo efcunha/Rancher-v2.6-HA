@@ -75,7 +75,7 @@ ssh ubuntu@172.16.0.15   # - RANCHER-SERVER-3
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin/kubectl
-kubectl version --client```
+kubectl version --client
 ```
 
 # Instalar RKE (Rancher Kubernetes Engine)
