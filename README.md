@@ -401,7 +401,7 @@ Abrir o Rancher e criar um novo cluster.
 
 Adicionar novo cluster com Existing Nodes 
 
-Podendo ser criado na versão Ramncher 2.6.2 tanto em RKE1 ou RKE2
+Podendo ser criado na versão Rancher 2.6.2 tanto em RKE1 ou RKE2
 
 ```sh
 #ETCD
