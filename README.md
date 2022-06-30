@@ -215,7 +215,7 @@ kubectl create namespace cattle-system
 # Certificate utilizando o Manager (Caso vc tenha os certificados ssl pule esta etapa)
 
 ```sh 
-kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.0.4/cert-manager.crds.yaml
+kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.8.2/cert-manager.crds.yaml
 
 kubectl create namespace cert-manager
 
@@ -225,7 +225,7 @@ helm repo update
 helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
-  --version v1.0.4
+  --version v1.8.2
 
 kubectl get pods -n cert-manager
 ```
