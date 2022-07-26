@@ -20,7 +20,7 @@ Estes são os itens que ao sentar na cadeira, nós iremos fazer um checklist e v
 * Ferramenta de Registro de imagens está online e funcionando?
 * Revisão dos backups se estão sendo executados.
 * Aplicações que fazem a limpeza no cluster estão rodando sem problemas? Verificar os logs.
-* Comandos de kubectl respondem normalmente?
+* Comandos de kubectl respondem normalmente ?
 
 Ferramentas periféricas
 * Ferramenta de integração contínua, online e funcionando? Se for o pipeline do Rancher, é na lista anterior.
