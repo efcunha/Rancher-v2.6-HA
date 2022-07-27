@@ -43,9 +43,9 @@ CASO todos os itens acima tenham sido revisados e estejam OK, dai então podemos
 * Meu pod está online, mas minha aplicação não
 * Não consigo acessar minha aplicação
 * Onde vejo os logs
-* Onde vejo o monitormento?
-* Onde acompanho os deployment's?
-* Pipeline com problema, como resolvo?
+* Onde vejo o monitormento ?
+* Onde acompanho os deployment's ?
+* Pipeline com problema, como resolvo ? 
 
 ## Referências
 
