@@ -10,21 +10,21 @@ https://rancher.com/docs/rancher/v2.x/en/installation/how-ha-works/
 
 Estes são os itens que ao sentar na cadeira, nós iremos fazer um checklist e verificar TODOS:
 
-* Máquinas estão online no virtualizador ou na nuvem?
-* RancherServer está online e acessível?
-* Cluster's kubernetes estão todos online e com seus nodes funcionando?
-* Monitoramento dos clusters está habilitado e funcionando?
-* Sistema de log dos cluster's está habilitado e funcionando?
-* Sistema de DNS dos cluster's está habilitado e funcionando?
-* Sistema de volumes dos clusters está habilitado e funcionando?
-* Ferramenta de Registro de imagens está online e funcionando?
+* Máquinas estão online no virtualizador ou na nuvem ?
+* RancherServer está online e acessível ?
+* Cluster's kubernetes estão todos online e com seus nodes funcionando ?
+* Monitoramento dos clusters está habilitado e funcionando ?
+* Sistema de log dos cluster's está habilitado e funcionando ?
+* Sistema de DNS dos cluster's está habilitado e funcionando ?
+* Sistema de volumes dos clusters está habilitado e funcionando ?
+* Ferramenta de Registro de imagens está online e funcionando ?
 * Revisão dos backups se estão sendo executados.
 * Aplicações que fazem a limpeza no cluster estão rodando sem problemas? Verificar os logs.
-* Comandos de kubectl respondem normalmente?
+* Comandos de kubectl respondem normalmente ?
 
 Ferramentas periféricas
 * Ferramenta de integração contínua, online e funcionando? Se for o pipeline do Rancher, é na lista anterior.
-* Ferramenta de repositório de código, git, online e funcionando?
+* Ferramenta de repositório de código, git, online e funcionando ?
 
 Itens para ficar atento
 * Quantidade de espaço em disco disponível nos worker's
